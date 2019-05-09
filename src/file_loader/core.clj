@@ -1,7 +1,9 @@
 (ns file-loader.core
-  (require '[clojure.string :as str]))
-; probably define a record here would be better
-(defonce personMapDef [ ; Assumes that the order of each file is the same
+  (require '[clojure.string :as str])
+  (use 'java-time))
+
+; Assumes that the order of each file is the same
+(defonce personMapDef [
   :lastName
   :firstName
   :gender
@@ -27,15 +29,22 @@
       (recur (inc i) (conj personMap {
         (get personMapDef i)
         (nth values i)})
-        )))
-  )
+        ))))
 
+(def format-date-for-sort (comp (partial local-date "M/d/yyyy") :dob))
 
-(defn sortByGender [data]
+(defn sortByGenderLastName [data]
   "sorts by gender F - > M using fact that F is first"
-  ; (println data)
-  ; (into [] (sort-by :gender data)))
-  (sort-by (juxt :gender :favColor) data))
+  (sort-by (juxt :gender :lastName) data))
+
+(defn sortByDob [data]
+  "sorts DOB ascending"
+  (sort-by format-date-for-sort data))
+
+(defn sortByLastName [data]
+  "sort by last name decending z -> a"
+  (reverse (sort-by :lastName data)))
+
 
 
 (let [fileContents (get-all-data)]
@@ -43,7 +52,11 @@
          normalizedPeople []
          fileContents fileContents]
     (if (= 0 (count fileContents))
-      (sort-by-dob normalizedPeople)
+      (do
+        (println sortByGenderLastName normalizedPeople)
+        (println sortByDob normalizedPeople)
+        (println sortByLastName normalizedPeople)
+        nil) ; explicit
       (do ;TODO remove this was there for testing
         (recur (+ 5 i)
           (conj normalizedPeople (generatePersonMap (take fields_per_person fileContents)))
