@@ -1,5 +1,5 @@
 (ns file-loader.sorters
-  (use java-time))
+  (:use java-time))
 
 (def format-date-for-sort (comp (partial local-date "M/d/yyyy") :dob))
 

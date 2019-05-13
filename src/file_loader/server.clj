@@ -1,9 +1,11 @@
-(ns.file-loader-server
-  (require '[file-loader.sorters :as sorters]
-           '[file-loader.personHelpers :as helpers])
-  (use '[org.httpkit.server]
-       '[compojure.core :only [defroutes GET POST DELETE ANY context]]
-       '[ring.util.json-response]))
+(ns file-loader.server
+  (:require [file-loader.sorters :as sorters]
+            [file-loader.personHelpers :as helpers])
+  (:use [org.httpkit.server]
+        [compojure.core :only [defroutes GET POST DELETE ANY context]]
+        [ring.util.json-response]))
+
+(defonce server (atom nil))
 
 (defn sortByDob []
   (let [data (helpers/get-all-data)
@@ -25,9 +27,9 @@
   (GET "/records/gender" [] (sortByGender))
   (GET "/records/name" [] (sortByName)))
 
-(defonce server (atom nil))
+(defn start-server []
+  (reset! server (run-server #'app {:port 8080})))
 
-(reset! server (run-server #'app {:port 8080}))
 
 (defn stop-server []
   (when-not (nil? @server)

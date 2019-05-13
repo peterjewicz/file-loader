@@ -1,7 +1,7 @@
 (ns file-loader.core
-  (require
-           '[file-loader.sorters :as sorters]
-           '[file-loader.personHelpers :as helpers]))
+  (:require
+           [file-loader.sorters :as sorters]
+           [file-loader.personHelpers :as helpers]))
 
 (defn -main []
   (let [fileContents (helpers/get-all-data)
