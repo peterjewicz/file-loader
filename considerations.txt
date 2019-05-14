@@ -1,5 +1,0 @@
-How fast are map lookups? I'm using it for a psuedo index, is that performant?
-https://stackoverflow.com/questions/7384072/performance-of-large-maps-in-clojure
-
-
-Atom makes a newline on save - messes with the date converter....
