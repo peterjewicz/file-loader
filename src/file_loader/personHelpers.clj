@@ -12,7 +12,7 @@
 
 (defonce fields_per_person (count personMapDef))
 
-(defn get-all-data []
+(defn getAllData []
   "Grabs all three text files and joins them together"
   (concat
     (str/split (slurp "src/file_loader/pipesep.txt") #"\|")

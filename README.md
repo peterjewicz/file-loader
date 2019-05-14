@@ -1,14 +1,13 @@
 # file-loader
 
-A Clojure library designed to ... well, that part is up to you.
+Cloverage report:
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2019 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+|---------------------------+---------+---------|
+|                 Namespace | % Forms | % Lines |
+|---------------------------+---------+---------|
+|          file-loader.core |    8.70 |   28.57 |
+| file-loader.personHelpers |   97.30 |  100.00 |
+|        file-loader.server |   83.72 |   85.37 |
+|       file-loader.sorters |  100.00 |  100.00 |
+|---------------------------+---------+---------|
+|                 ALL FILES |   83.06 |   85.90 |

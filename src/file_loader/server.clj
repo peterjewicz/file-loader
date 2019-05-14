@@ -1,31 +1,54 @@
 (ns file-loader.server
   (:require [file-loader.sorters :as sorters]
-            [file-loader.personHelpers :as helpers])
+            [file-loader.personHelpers :as helpers]
+            [clojure.string :as str])
   (:use [org.httpkit.server]
         [compojure.core :only [defroutes GET POST DELETE ANY context]]
-        [ring.util.json-response]))
+        [ring.util.json-response]
+        [ring.middleware.params]))
 
 (defonce server (atom nil))
 
+(defn formatResponse [req]
+  (if (str/includes? req "|")
+    (str/split req #"\|")
+    (if (str/includes? req " ")
+      (str/split req #" ")
+      (if (str/includes? req ",")
+        (str/split req #",")
+        (println "invalid file format"))))) ; error handling
+
+; Route handlers defined below
+(defn addRecord [req]
+  (let [value (-> req :params (get "value"))]
+    (if (= 5 (count (formatResponse value)))
+      (json-response value) ; In a real application we could add some persistence here
+      (println "Too Few Fields")))) ;TODO error handling
+
 (defn sortByDob []
-  (let [data (helpers/get-all-data)
+  (let [data (helpers/getAllData)
         normalizedData (helpers/normalizePeopleData data)]
   (json-response (sorters/sortByDob normalizedData))))
 
 (defn sortByGender []
-  (let [data (helpers/get-all-data)
+  (let [data (helpers/getAllData)
         normalizedData (helpers/normalizePeopleData data)]
   (json-response (sorters/sortByGenderLastName normalizedData))))
 
 (defn sortByName []
-  (let [data (helpers/get-all-data)
+  (let [data (helpers/getAllData)
         normalizedData (helpers/normalizePeopleData data)]
   (json-response (sorters/sortByLastName normalizedData))))
 
-(defroutes app
+(defroutes appRoutes
+  (POST "/records" [] addRecord)
   (GET "/records/birthdate" [] (sortByDob))
   (GET "/records/gender" [] (sortByGender))
   (GET "/records/name" [] (sortByName)))
+
+(def app ; this is required or you won't get params in post reuest...
+  (-> appRoutes
+    ring.middleware.params/wrap-params))
 
 (defn start-server []
   (reset! server (run-server #'app {:port 8080})))
