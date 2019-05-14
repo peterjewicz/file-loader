@@ -27,8 +27,7 @@
       personMap
       (recur (inc i) (conj personMap {
         (get personMapDef i)
-        (nth values i)})
-        ))))
+        (nth values i)})))))
 
 (defn normalizePeopleData [data]
   "Takes the people data and turns it into a consistent map"
@@ -37,7 +36,6 @@
          data data]
     (if (= 0 (count data))
       normalizedPeople
-      (do ;TODO remove this was there for testing
-        (recur (+ 5 i)
-          (conj normalizedPeople (generatePersonMap (take fields_per_person data)))
-          (drop fields_per_person data))))))
+      (recur (+ 5 i)
+        (conj normalizedPeople (generatePersonMap (take fields_per_person data)))
+        (drop fields_per_person data)))))
